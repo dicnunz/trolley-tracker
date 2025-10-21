@@ -1,0 +1,41 @@
+{
+  "updatedAt": "2024-03-01T14:00:00Z",
+  "vehicles": [
+    { "id": "trolley-1", "progress": 0.15, "status": "on-time" },
+    { "id": "trolley-2", "progress": 0.62, "status": "on-time" }
+  ],
+  "etas": {
+    "commons": [
+      { "vehicleId": "trolley-1", "etaMinutes": 4 },
+      { "vehicleId": "trolley-2", "etaMinutes": 17 }
+    ],
+    "wfit": [
+      { "vehicleId": "trolley-1", "etaMinutes": 7 },
+      { "vehicleId": "trolley-2", "etaMinutes": 11 }
+    ],
+    "miller": [
+      { "vehicleId": "trolley-1", "etaMinutes": 9 },
+      { "vehicleId": "trolley-2", "etaMinutes": 8 }
+    ],
+    "res": [
+      { "vehicleId": "trolley-1", "etaMinutes": 13 },
+      { "vehicleId": "trolley-2", "etaMinutes": 5 }
+    ],
+    "olin": [
+      { "vehicleId": "trolley-1", "etaMinutes": 10 },
+      { "vehicleId": "trolley-2", "etaMinutes": 7 }
+    ],
+    "pdh": [
+      { "vehicleId": "trolley-1", "etaMinutes": 2 },
+      { "vehicleId": "trolley-2", "etaMinutes": 19 }
+    ],
+    "cob": [
+      { "vehicleId": "trolley-1", "etaMinutes": 15 },
+      { "vehicleId": "trolley-2", "etaMinutes": 3 }
+    ],
+    "bridge": [
+      { "vehicleId": "trolley-1", "etaMinutes": 18 },
+      { "vehicleId": "trolley-2", "etaMinutes": 1 }
+    ]
+  }
+}
