@@ -8,6 +8,9 @@
 - Mock feed JSON files (`data/mock/*.json`) carry simple progress + ETA payloads that approximate the live API shape. They keep the SVG route animation while avoiding external services.
 - `npm run e2e` and `npm run lighthouse` are placeholders; they log instructions until test suites are defined.
 - Live schedule parsing still uses the raw text blocks embedded in `App.jsx`, matching the prototype behavior while the data layer exposes a simpler JSON-based helper for stop-specific lookups.
+- Live ETA freshness defaults to 45 seconds. When the feed is older or empty we switch to the published schedule and label it “Schedule estimate.” Tweak `VITE_LIVE_STALE_MS` if the feed cadence changes.
+- Stop coordinates are approximate campus values so geolocation can pick a sensible default. They can be swapped for official GIS data without touching the map API.
+- Browser notifications fall back to in-app timers when permissions are denied or unsupported; only stop + alert preferences are persisted in localStorage per the privacy requirement.
 
 ## Next Steps (Phase 2 Preview)
 
