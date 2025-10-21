@@ -1,6 +1,0 @@
-Empathize: 41 responses; pain = ETA uncertainty; gain = reliable ‘next arrival’.
-Define: POV = reduce wasted wait time for freshmen/sophomores relying on trolley.
-Ideate: chose live map + next-arrival list + notify flow for MVP.
-Prototype v0: static schedule + looping demo bus.
-Feedback: prioritize ‘Notify me’ and clarity of ETA over full map detail.
-Iteration v1: added accuracy control + clarified arrivals and watch‑stop concept.
