@@ -9,9 +9,10 @@
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "format": "prettier --write .",
-    "test": "vitest",
-    "e2e": "echo 'No e2e tests defined yet'",
-    "lighthouse": "echo 'Run: npm run build && npx lighthouse http://localhost:4173 --view'",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "lighthouse": "lhci autorun",
     "gen:print": "node scripts/gen-print.js"
   },
   "dependencies": {
@@ -19,6 +20,8 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.12.0",
+    "@playwright/test": "^1.45.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.57.0",

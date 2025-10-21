@@ -17,3 +17,28 @@
 - Flesh out automated tests (unit/e2e) and replace placeholder scripts with real checks.
 - Expand the data layer to normalise external API payloads and reconcile with the schedule parser.
 - Add telemetry wiring behind the optional `VITE_TELEMETRY_URL` flag.
+
+# Phase 3 Notes
+
+## Tradeoffs & Assumptions
+
+- Added lightweight telemetry that prints event counters to the console and optionally POSTs to `VITE_TELEMETRY_URL`. Network
+  failures are swallowed so alerts and fallback logic never regress if the endpoint is offline.
+- Exposed a minimal `window.__trolleyTestHooks` surface (only when `window.__TROLLEY_TEST_MODE` is set) to drive Playwright
+  scenarios such as toggling service state or simulating live feed errors. Production builds ignore the hooks entirely.
+- GitHub Actions installs Playwright browsers on the fly; local runs still require installing `@playwright/test` and
+  `@lhci/cli` in a networked environment because this sandbox cannot reach npm.
+
+## Automated Checks
+
+- Vitest covers ETA formatting edge cases, live→schedule fallback behaviour, and the stale-live guard.
+- Playwright verifies the nearest-stop badge, alert arming, alert disablement while service is off, and the automatic switch to
+  schedule estimates when live data fails.
+- CI (Node 20) now runs linting, unit tests, build, Playwright E2E, and Lighthouse CI; the workflow posts Lighthouse scores back
+  to pull requests.
+
+## Performance
+
+- Initial JavaScript bundle (gzip): 55.39 kB (`dist/assets/index-Dn7TWXl1.js`).
+- Lighthouse (mobile): run `npm run lighthouse` after installing `@lhci/cli`; the CI workflow will capture and comment the
+  scores once dependencies are available.

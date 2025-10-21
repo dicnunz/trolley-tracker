@@ -129,15 +129,15 @@ function segmentLen(a, b) {
 }
 
 function cumulative(route) {
-  const L = [0];
+  const lengths = [0];
   for (let i = 1; i < route.length; i += 1) {
-    L[i] = L[i - 1] + segmentLen(route[i - 1], route[i]);
+    lengths[i] = lengths[i - 1] + segmentLen(route[i - 1], route[i]);
   }
-  return { L, total: L[L.length - 1] };
+  return { L: lengths, total: lengths[lengths.length - 1] };
 }
 
 function projectOnPath(route, Ltab, p) {
-  const { L, total } = Ltab;
+  const { total } = Ltab;
   let bestT = 0;
   let bestD = Infinity;
   let acc = 0;
@@ -164,14 +164,14 @@ function projectOnPath(route, Ltab, p) {
 }
 
 function pointAt(route, Ltab, t) {
-  const { L, total } = Ltab;
+  const { L: lengths, total } = Ltab;
   const target = t * total;
   let i = 1;
-  while (i < L.length && L[i] < target) i += 1;
+  while (i < lengths.length && lengths[i] < target) i += 1;
   const a = route[i - 1];
   const b = route[i] || route[i - 1];
-  const seg = L[i] - L[i - 1] || 1;
-  const lt = (target - L[i - 1]) / seg;
+  const seg = lengths[i] - lengths[i - 1] || 1;
+  const lt = (target - lengths[i - 1]) / seg;
   return { x: a.x + (b.x - a.x) * lt, y: a.y + (b.y - a.y) * lt };
 }
 
