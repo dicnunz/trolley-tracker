@@ -1,0 +1,11 @@
+{
+  "updatedAt": "2024-03-01T13:55:00Z",
+  "message": "Running every 15 minutes. Expect minor delays near Country Club Road due to construction.",
+  "incidents": [
+    {
+      "id": "detour-1",
+      "title": "Detour",
+      "detail": "The trolley is avoiding the WFIT stop from 2-3pm for an event."
+    }
+  ]
+}
