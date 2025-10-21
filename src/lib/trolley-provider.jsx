@@ -1,7 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { getLiveETAs, getScheduleEstimate, getStatus } from './data';
 import { STOPS } from './route';
 import { formatClock, minutesUntil, parseScheduleSeries } from './time';
+import { recordTelemetry } from './telemetry';
 
 const TrolleyDataContext = createContext(null);
 
@@ -14,12 +15,19 @@ const STOPS_BY_ID = STOPS.reduce((acc, stop) => {
   return acc;
 }, {});
 
-function getServiceState(status) {
+const TEST_MODE_ENV = String(import.meta.env?.VITE_TEST_MODE ?? 'false').toLowerCase() === 'true';
+
+function isTestMode() {
+  if (typeof window !== 'undefined' && window.__TROLLEY_TEST_MODE === true) return true;
+  return TEST_MODE_ENV;
+}
+
+export function getServiceState(status) {
   const candidate = (status?.state ?? status?.service ?? DEFAULT_SERVICE_STATE)?.toString().toLowerCase();
   return SERVICE_STATES.has(candidate) ? candidate : DEFAULT_SERVICE_STATE;
 }
 
-function computeArrivals({
+export function computeArrivals({
   mode,
   live,
   liveFetchedAt,
@@ -75,11 +83,27 @@ function computeArrivals({
   return arrivals;
 }
 
+export function isLiveDataFresh({ liveState, clock, staleAfterMs }) {
+  if (!liveState || liveState.status !== 'success') return false;
+  const hasArrivals =
+    liveState.data?.etas && Object.values(liveState.data.etas).some((list) => Array.isArray(list) && list.length > 0);
+  if (!hasArrivals) return false;
+  const updatedMs = liveState.data?.updatedAt ? Date.parse(liveState.data.updatedAt) : Number.NaN;
+  if (Number.isFinite(updatedMs)) {
+    return clock - updatedMs <= staleAfterMs;
+  }
+  if (liveState.fetchedAt) {
+    return clock - liveState.fetchedAt <= staleAfterMs;
+  }
+  return false;
+}
+
 export function TrolleyDataProvider({ children }) {
   const [liveState, setLiveState] = useState({ status: 'idle', data: null, fetchedAt: null });
   const [scheduleState, setScheduleState] = useState({ status: 'idle', data: null, fetchedAt: null });
   const [statusState, setStatusState] = useState({ status: 'idle', data: null, fetchedAt: null });
   const [clock, setClock] = useState(() => Date.now());
+  const prevModeRef = useRef(null);
 
   const scheduleSeries = useMemo(() => {
     if (!scheduleState.data?.stops) return null;
@@ -96,6 +120,7 @@ export function TrolleyDataProvider({ children }) {
       setLiveState({ status: 'success', data, fetchedAt: Date.now() });
     } catch (error) {
       console.error('Failed to load live ETAs', error);
+      recordTelemetry('live_eta_error', { message: error?.message });
       setLiveState({ status: 'error', data: null, error, fetchedAt: Date.now() });
     }
   }, []);
@@ -141,22 +166,20 @@ export function TrolleyDataProvider({ children }) {
     return () => clearInterval(id);
   }, []);
 
-  const isLiveFresh = useMemo(() => {
-    if (liveState.status !== 'success') return false;
-    const updatedAt = liveState.data?.updatedAt;
-    const updatedMs = updatedAt ? Date.parse(updatedAt) : null;
-    const hasArrivals = liveState.data?.etas && Object.values(liveState.data.etas).some((list) => list?.length);
-    if (!hasArrivals) return false;
-    if (updatedMs && Number.isFinite(updatedMs)) {
-      return clock - updatedMs <= STALE_AFTER_MS;
-    }
-    if (liveState.fetchedAt) {
-      return clock - liveState.fetchedAt <= STALE_AFTER_MS;
-    }
-    return false;
-  }, [clock, liveState]);
+  const isLiveFresh = useMemo(
+    () => isLiveDataFresh({ liveState, clock, staleAfterMs: STALE_AFTER_MS }),
+    [clock, liveState]
+  );
 
   const mode = isLiveFresh ? 'live' : 'schedule';
+
+  useEffect(() => {
+    if (prevModeRef.current === 'live' && mode === 'schedule') {
+      const reason = liveState.status === 'success' ? 'stale' : liveState.status;
+      recordTelemetry('fallback_used', { reason });
+    }
+    prevModeRef.current = mode;
+  }, [mode, liveState.status]);
 
   const arrivals = useMemo(
     () =>
@@ -193,8 +216,49 @@ export function TrolleyDataProvider({ children }) {
       serviceState,
       serviceUpdatedAt: statusState.data?.updatedAt,
     }),
-    [arrivals, lastUpdated, mode, refreshLive, scheduleState.data, serviceState, statusState.data, liveState.data]
+    [
+      arrivals,
+      isLiveFresh,
+      lastUpdated,
+      mode,
+      refreshLive,
+      scheduleState.data,
+      serviceState,
+      statusState.data,
+      liveState.data,
+    ]
   );
+
+  useEffect(() => {
+    if (!isTestMode() || typeof window === 'undefined') return undefined;
+    const hooks = {
+      setServiceState(next) {
+        if (!next) {
+          setStatusState((prev) => ({
+            ...prev,
+            data: prev.data ? { ...prev.data, state: undefined } : prev.data,
+          }));
+          return;
+        }
+        const normalized = next.toString().toLowerCase();
+        if (!SERVICE_STATES.has(normalized)) return;
+        setStatusState((prev) => ({
+          status: 'success',
+          data: { ...(prev.data ?? {}), state: normalized },
+          fetchedAt: Date.now(),
+        }));
+      },
+      simulateLiveError() {
+        setLiveState({ status: 'error', data: null, error: new Error('test live error'), fetchedAt: Date.now() });
+      },
+    };
+    window.__trolleyTestHooks = hooks;
+    return () => {
+      if (window.__trolleyTestHooks === hooks) {
+        delete window.__trolleyTestHooks;
+      }
+    };
+  }, []);
 
   return <TrolleyDataContext.Provider value={contextValue}>{children}</TrolleyDataContext.Provider>;
 }

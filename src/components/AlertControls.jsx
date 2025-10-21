@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { formatRelativeMinutes } from '../lib/time';
+import { recordTelemetry } from '../lib/telemetry';
 
 function cx(...parts) {
   return parts.filter(Boolean).join(' ');
@@ -87,6 +88,13 @@ export default function AlertControls({
       } else {
         showBanner(`${stop.label}: ${sourceLabel} ${arrivalLabel}`);
       }
+      recordTelemetry('alert_fired', {
+        stopId: selectedStopId,
+        leadMinutes,
+        eta,
+        channel: nextPermission === 'granted' ? 'notification' : 'banner',
+        source: sourceLabel,
+      });
       setActiveAlert(null);
     };
 
@@ -101,6 +109,12 @@ export default function AlertControls({
       eta,
       fireAt: Date.now() + delayMs,
       sourceLabel,
+    });
+    recordTelemetry('alert_set', {
+      stopId: selectedStopId,
+      leadMinutes,
+      eta,
+      source: sourceLabel,
     });
   };
 
