@@ -1,6 +1,6 @@
 {
   "name": "trolley-tracker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,8 +10,9 @@
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "format": "prettier --write .",
     "test": "vitest",
-    "e2e": "echo 'No e2e tests defined yet'",
-    "lighthouse": "echo 'Run: npm run build && npx lighthouse http://localhost:4173 --view'",
+    "test:ci": "vitest run --passWithNoTests",
+    "verify:mocks": "node scripts/verify-mock-data.js",
+    "check": "npm run lint && npm run test:ci && npm run build && npm run verify:mocks",
     "gen:print": "node scripts/gen-print.js"
   },
   "dependencies": {

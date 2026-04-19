@@ -13,13 +13,10 @@ Students waste time waiting with no reliable trolley ETA. We reduce uncertainty 
 - “Notify me at X minutes” alerts  
 - Fallback ETA when GPS is unavailable
 
-**Quotes (anonymized)**  
-
-
-**Prototype → Test**  
-- v0: static schedule + looping demo bus  
-- Feedback: prioritize alerts and ETA clarity over detailed map chrome  
-- v1: watch-stop alert, headway fallback, a11y, high-contrast
+**Delivery progression**  
+- Initial build: static schedule + route visualization  
+- User feedback: prioritize ETA trust and alert clarity over map ornamentation  
+- Current product: stop alerts, schedule fallback, status incidents, and improved accessibility contrast
 
 **Metrics for success**  
 - Avg wait time ↓ (target 30–50%)  

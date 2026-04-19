@@ -11,5 +11,5 @@ npm install
 npm run dev       # start Vite dev server
 npm run test      # unit tests (Vitest)
 npm run lint      # eslint
-npm run lighthouse # see package.json for manual instructions
+npm run check     # lint + tests + build + mock validation
 ```

@@ -1,0 +1,111 @@
+{
+  "generatedAt": "2026-04-19T02:31:56.372Z",
+  "liveUpdatedAt": "2024-03-01T14:00:00Z",
+  "statusUpdatedAt": "2024-03-01T13:55:00Z",
+  "statusMessage": "Running every 15 minutes. Expect minor delays near Country Club Road due to construction.",
+  "incidents": [
+    {
+      "id": "detour-1",
+      "title": "Detour",
+      "detail": "The trolley is avoiding the WFIT stop from 2-3pm for an event."
+    }
+  ],
+  "stops": [
+    {
+      "stopId": "commons",
+      "nextLiveEtas": [
+        4,
+        17
+      ],
+      "nextScheduledTimes": [
+        "07:45",
+        "08:15",
+        "08:45"
+      ]
+    },
+    {
+      "stopId": "wfit",
+      "nextLiveEtas": [
+        7,
+        11
+      ],
+      "nextScheduledTimes": [
+        "07:48",
+        "08:18",
+        "08:48"
+      ]
+    },
+    {
+      "stopId": "miller",
+      "nextLiveEtas": [
+        9,
+        8
+      ],
+      "nextScheduledTimes": [
+        "07:51",
+        "08:21",
+        "08:51"
+      ]
+    },
+    {
+      "stopId": "res",
+      "nextLiveEtas": [
+        13,
+        5
+      ],
+      "nextScheduledTimes": [
+        "07:55",
+        "08:25",
+        "08:55"
+      ]
+    },
+    {
+      "stopId": "olin",
+      "nextLiveEtas": [
+        10,
+        7
+      ],
+      "nextScheduledTimes": [
+        "07:53",
+        "08:23",
+        "08:53"
+      ]
+    },
+    {
+      "stopId": "pdh",
+      "nextLiveEtas": [
+        2,
+        19
+      ],
+      "nextScheduledTimes": [
+        "07:41",
+        "08:11",
+        "08:41"
+      ]
+    },
+    {
+      "stopId": "cob",
+      "nextLiveEtas": [
+        15,
+        3
+      ],
+      "nextScheduledTimes": [
+        "07:47",
+        "08:17",
+        "08:47"
+      ]
+    },
+    {
+      "stopId": "bridge",
+      "nextLiveEtas": [
+        18,
+        1
+      ],
+      "nextScheduledTimes": [
+        "07:59",
+        "08:29",
+        "08:59"
+      ]
+    }
+  ]
+}

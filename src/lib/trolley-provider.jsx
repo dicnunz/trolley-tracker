@@ -193,7 +193,7 @@ export function TrolleyDataProvider({ children }) {
       serviceState,
       serviceUpdatedAt: statusState.data?.updatedAt,
     }),
-    [arrivals, lastUpdated, mode, refreshLive, scheduleState.data, serviceState, statusState.data, liveState.data]
+    [arrivals, isLiveFresh, lastUpdated, mode, refreshLive, scheduleState.data, serviceState, statusState.data, liveState.data]
   );
 
   return <TrolleyDataContext.Provider value={contextValue}>{children}</TrolleyDataContext.Provider>;

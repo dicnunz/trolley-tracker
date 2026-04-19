@@ -137,7 +137,7 @@ function cumulative(route) {
 }
 
 function projectOnPath(route, Ltab, p) {
-  const { L, total } = Ltab;
+  const { total } = Ltab;
   let bestT = 0;
   let bestD = Infinity;
   let acc = 0;
